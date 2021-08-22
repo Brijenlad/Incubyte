@@ -18,7 +18,6 @@ try:
 
             for i in result:
                 if (i[0].upper() == Country):
-                    print("hello",i[0].upper(),Country)
                     try:
                         mySql_insert_query = """INSERT INTO """+Country+""" (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
                         mycursor = mydb.cursor()
@@ -29,21 +28,7 @@ try:
                     except cm.IntegrityError as exe:
                         print("Record is already exists.")
             if (flag == 0):
-                print(list[2], list[3])
-                mySql_Create_Table_Query = """CREATE TABLE """+Country+""" ( 
-                                                 Customer_Name varchar(255) NOT NULL,                             
-                                                 Customer_Id varchar(18) NOT NULL ,                                                                                     
-                                                 Customer_Open_Date Date NOT NULL,
-                                                 Last_Consulted_Date Date ,                            
-                                                 Vaccination_Type char(5) ,
-                                                 Doctor_Consulted char(255) ,
-                                                 State char(5) ,
-                                                 Country char(5) ,
-                                                 Postcode int(5) ,
-                                                 Date_of_Birth Date ,
-                                                 Active_Customer char(1) ,
-                                                 PRIMARY KEY (Customer_Name)
-                                                ) """
+                mySql_Create_Table_Query = """ CREATE TABLE """+Country+""" ( Customer_Name varchar(255) NOT NULL, Customer_Id varchar(18) NOT NULL , Customer_Open_Date Date NOT NULL, Last_Consulted_Date Date , Vaccination_Type char(5) , Doctor_Consulted char(255) , State char(5) , Country char(5) , Postcode int(5) , Date_of_Birth Date , Active_Customer char(1) , PRIMARY KEY (Customer_Name) ) """
                 mycursor = mydb.cursor()
                 result = mycursor.execute(mySql_Create_Table_Query)
                 print("Country Table created successfully:- ")
@@ -74,4 +59,7 @@ finally:
             mydb.commit()
             mydb.close()
             print("MySQL connection is closed.")
+
+            
+
 
