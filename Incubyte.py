@@ -1,6 +1,5 @@
-#Connection to Databse
 import mysql.connector as cm
-mydb = cm.connect(host="localhost",user="root",passwd="brijen#660",database="sys")
+mydb = cm.connect (host="localhost",user="root",passwd="brijen#660",database="sys")
 try:
     mycursor = mydb.cursor()
     flag=0
@@ -10,28 +9,30 @@ try:
         list=line.split('|') #Split data from file using | Symbol
         Country=(list[9])
         if(list[1]=='D'):
-
             name=list[2]
             start=list[3]
             flag = 0
             showQuery = "show tables;" #Find tables in Database
             mycursor.execute(showQuery) #Execute the Query
             result = mycursor.fetchall() # Fetch all data from the database
+
             for i in result:
                 if (i[0].upper() == Country):
-                    mySql_insert_query = """INSERT INTO """+Country+""" (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
-                    mycursor = mydb.cursor()
-                    result = mycursor.execute(mySql_insert_query, (
-                        list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],
-                        list[12]))
-                    print(mycursor.rowcount, "Record inserted successfully into Country table.")
-
-                    flag = 1
-                    break
+                    print("hello",i[0].upper(),Country)
+                    try:
+                        mySql_insert_query = """INSERT INTO """+Country+""" (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
+                        mycursor = mydb.cursor()
+                        result = mycursor.execute(mySql_insert_query, (list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],list[12]))
+                        print(mycursor.rowcount, "Record inserted successfully into Country table.")
+                        flag = 1
+                        break
+                    except cm.IntegrityError as exe:
+                        print("Record is already exists.")
             if (flag == 0):
+                print(list[2], list[3])
                 mySql_Create_Table_Query = """CREATE TABLE """+Country+""" ( 
                                                  Customer_Name varchar(255) NOT NULL,                             
-                                                 Customer_Id varchar(18) NOT NULL PRIMARY KEY,                                                                                     
+                                                 Customer_Id varchar(18) NOT NULL ,                                                                                     
                                                  Customer_Open_Date Date NOT NULL,
                                                  Last_Consulted_Date Date ,                            
                                                  Vaccination_Type char(5) ,
@@ -40,51 +41,37 @@ try:
                                                  Country char(5) ,
                                                  Postcode int(5) ,
                                                  Date_of_Birth Date ,
-                                                 Active_Customer char(1) 
+                                                 Active_Customer char(1) ,
+                                                 PRIMARY KEY (Customer_Name)
                                                 ) """
-                print()
                 mycursor = mydb.cursor()
                 result = mycursor.execute(mySql_Create_Table_Query)
                 print("Country Table created successfully:- ")
-                mySql_insert_query = """INSERT INTO """ + Country + """ (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
-                mycursor = mydb.cursor()
-                result = mycursor.execute(mySql_insert_query, (
-                    list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],
-                    list[12]))
-                print(mycursor.rowcount, "Record inserted successfully into Country table.")
 
+                try:
+                    mySql_insert_query = """INSERT INTO """ + Country + """ (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
+                    mycursor = mydb.cursor()
+                    result = mycursor.execute(mySql_insert_query, (list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],list[12]))
+                    print(mycursor.rowcount, "Record inserted successfully into Country table.")
+                except cm.IntegrityError as exe:
+                    print("Record is already exists.")
             else:
-                #                       mySql_Create_Table_Query = """CREATE TABLE Customers (
-                #                             Customer_Name varchar(255) NOT NULL,
-                #                             Customer_Id varchar(18) NOT NULL PRIMARY KEY,
-                #                             Customer_Open_Date Date NOT NULL,
-                #                             Last_Consulted_Date Date ,
-                #                             Vaccination_Type char(5) ,
-                #                             Doctor_Consulted char(255) ,
-                #                             State char(5) ,
-                #                             Country char(5) ,
-                #                             Postcode int(5) ,
-                #                             Date_of_Birth Date ,
-                #                           ) """
                 mycursor = mydb.cursor()
-                result = mycursor.execute(mySql_Create_Table_Query)
-                print("Customers Table created successfully:- ")
-                mySql_insert_query = """INSERT INTO """ + Country + """ (Customer_Name,Customer_Id,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
-                mycursor = mydb.cursor()
-                result = mycursor.execute(mySql_insert_query, (
-                    list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],
-                    list[12]))
-                print(mycursor.rowcount, "Record inserted successfully into Customers table.")
-
-
-
+                print("Country Table created successfully:- ")
+                mySql_insert_query = """INSERT INTO """ + Country + """ (Customer_Name,Customer_ID,Customer_Open_Date,Last_Consulted_Date,Vaccination_Type,Doctor_Consulted, State,Country,Postcode,Date_of_Birth,Active_Customer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
+                try:
+                    result = mycursor.execute(mySql_insert_query, (
+                    list[2], list[3], list[4], list[5], list[6], list[7], list[8], list[9], list[10], list[11],list[12]))
+                    print(mycursor.rowcount, "Record inserted successfully into Customers table.")
+                except cm.IntegrityError as exe:
+                        print("Record is already exists.")
 except cm.Error as error:
             print("Failed to create table in MySQL:- {}".format(error))
-            print("Failed to insert record into Customers table {}".format(error))
+            print("Failed to insert record into Country table:- {}".format(error))
+            print("Failed to insert duplicate record:- {}".format(error))
 finally:
         if mydb.is_connected():
             mydb.commit()
-            mycursor.close()
             mydb.close()
             print("MySQL connection is closed.")
-file.close()
+
